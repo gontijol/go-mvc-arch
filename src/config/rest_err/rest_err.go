@@ -5,7 +5,7 @@ import "net/http"
 type RestErr struct {
 	Message string   `json:"message"`
 	Err     string   `json:"error"`
-	Code    int64    `json:"code"`
+	Code    int      `json:"code"`
 	Causes  []Causes `json:"causes"`
 }
 type Causes struct {
@@ -17,7 +17,7 @@ func (r *RestErr) Error() string {
 	return r.Message
 }
 
-func NewRestError(message string, err string, code int64, causes []Causes) *RestErr {
+func NewRestError(message string, err string, code int, causes []Causes) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     err,
@@ -26,7 +26,14 @@ func NewRestError(message string, err string, code int64, causes []Causes) *Rest
 	}
 }
 
-func NewBadRequestError(message string, err string, code int64, causes []Causes) *RestErr {
+func NewBadRequestError(message string) *RestErr {
+	return &RestErr{
+		Message: message,
+		Err:     "bad_request",
+	}
+}
+
+func NewBadRequestValidationError(message string, err string, code int, causes []Causes) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "bad_request",
@@ -35,16 +42,7 @@ func NewBadRequestError(message string, err string, code int64, causes []Causes)
 	}
 }
 
-func NewBadRequestValidationError(message string, err string, code int64, causes []Causes) *RestErr {
-	return &RestErr{
-		Message: message,
-		Err:     "bad_request",
-		Code:    http.StatusBadRequest,
-		Causes:  causes,
-	}
-}
-
-func NewInternalServerError(message string, err string, code int64, causes []Causes) *RestErr {
+func NewInternalServerError(message string, err string, code int, causes []Causes) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "internal_server_error",

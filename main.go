@@ -1,6 +1,7 @@
 package main
 
 import (
+	logger "bv-api/src/config/logs"
 	"bv-api/src/controller/routes"
 	"log"
 
@@ -15,6 +16,8 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+
+	logger.Info("Iniciando API")
 
 	err := godotenv.Load()
 	if err != nil {

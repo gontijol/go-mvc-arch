@@ -30,6 +30,7 @@ func NewBadRequestError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "bad_request",
+		Code:    http.StatusBadRequest,
 	}
 }
 

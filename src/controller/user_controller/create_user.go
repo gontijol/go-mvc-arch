@@ -48,4 +48,9 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	logger.Info("User created successfuly 🤩",
+		zap.String("journey", "create_user"))
+
+	c.JSON(200, domainUser)
+
 }

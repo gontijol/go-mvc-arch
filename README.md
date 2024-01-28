@@ -37,6 +37,3 @@ Follow the steps below to install the project in your development environment:
    docker compose up
    ```
 
-## Running the Application
-
-After installation, you can run the MeuPrimeiroCRUD em Go application with the following command (if you want to run it directly with Golang):

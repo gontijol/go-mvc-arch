@@ -1,31 +1,42 @@
 package main
 
 import (
-	logger "bv-api/src/config/logs"
-	"bv-api/src/controller/routes"
+	"context"
 	"log"
 
+	_ "github.com/HunCoding/meu-primeiro-crud-go/docs"
+	"github.com/HunCoding/meu-primeiro-crud-go/src/configuration/database/mongodb"
+	"github.com/HunCoding/meu-primeiro-crud-go/src/configuration/logger"
+	"github.com/HunCoding/meu-primeiro-crud-go/src/controller/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
-// @title BV API Service
+// @title Meu Primeiro CRUD em Go | HunCoding
 // @version 1.0
-// @description API para "PROJETO SECRETO"
-
+// @description API for crud operations on users
 // @host localhost:8080
 // @BasePath /
+// @schemes http
+// @license MIT
 func main() {
+	logger.Info("About to start user application")
 
-	logger.Info("Iniciando API")
+	godotenv.Load()
 
-	err := godotenv.Load()
+	database, err := mongodb.NewMongoDBConnection(context.Background())
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatalf(
+			"Error trying to connect to database, error=%s \n",
+			err.Error())
+		return
 	}
 
+	userController := initDependencies(database)
+
 	router := gin.Default()
-	routes.InitRoutes(&router.RouterGroup)
+	gin.SetMode(gin.ReleaseMode)
+	routes.InitRoutes(&router.RouterGroup, userController)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
